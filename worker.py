@@ -41,7 +41,7 @@ class Worker:
             pool = Pool(processes=self.poolsize)
             for size in self.sizes:
                 try:
-                    print(self.ASK+'Ask process to resize #'+str(nb)+self.END)
+                    print(self.ASK+'Ask process to resize #'+str(nb)+' ('+image+')'+self.END)
                     if self.debug:
                         debug = pool.apply_async(self.resize, (image, size, nb))
                         debug.get()
@@ -99,7 +99,7 @@ class Worker:
         except Exception as e:
             print('Error while resizing: '+e)
 
-        print(self.GREEN+'Process ~> #'+str(nb)+' resized ('+imagePath+')'+self.END)
+        print(self.GREEN+'Process ~> #'+str(nb)+' resized ('+newImageName+')'+self.END)
 
 if __name__ == "__main__":
     test = Worker()
