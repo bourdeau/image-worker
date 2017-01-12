@@ -1,7 +1,8 @@
 # image-worker
 Resizing images in Python vs PHP 🐍
 
-Resizing 354 images (539.6 Mo) in 6 width (1200, 800, 650, 400, 300, 250)
+## Test
+Resizing 354 images (539.6 Mb) in 6 widths (1200px, 800px, 650px, 400px, 300px, 250px)
 
 ```bash
 $ time php worker.php
@@ -19,4 +20,11 @@ user	1m48.532s
 sys	0m12.292s
 ```
 
-![Can't touch this](http://www.temptatz.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/t/0/t003.jpg)
+![Can't touch this](http://www.tigerstrypes.com/wp-content/uploads/2016/04/hammer2.jpg)
+
+## Explanations
+I wrote almost the same code in both languages and they perform the same (2m20~)
+
+But with Python Multiprocessing with 2 workers then they don't play in the same league.
+
+*Note:* Python LIB seem to do better than PHP Imagick in term of image size.
