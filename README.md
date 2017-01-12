@@ -15,12 +15,10 @@ sys	0m16.684s
 ```bash
 $ time python3 worker.py
 
-real	0m18.279s #WHAT THE F*******CK !!! :D
+real	0m18.279s
 user	1m4.452s
 sys	0m5.236s
 ```
-
-![Can't touch this](http://www.tigerstrypes.com/wp-content/uploads/2016/04/hammer2.jpg)
 
 ## Explanations
 I wrote almost the same code in both languages and they perform almost he same (2m20~)
@@ -30,3 +28,6 @@ But when using Python Multiprocessing then they don't play in the same league.
 I ran my test on a Intel(R) Core(TM) i5-5200U CPU @ 2.20GHz (2 cores & 4 threads)
 
 *Note:* Python LIB seem to do better than PHP Imagick in term of image size.
+
+## BUGS
+- When running in Multiprocessing it randomly loose some images

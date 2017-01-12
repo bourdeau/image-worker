@@ -9,6 +9,7 @@ from multiprocessing import Pool
 class Worker:
 
     def __init__(self):
+        self.multiprocessing = True
         self.poolsize = 1
         self.cdnPath = "/home/ph/Bureau/cdn_squarebreak"
         self.cdnNewPath = "/home/ph/Bureau/PYTHON_cdn_squarebreak"
@@ -22,11 +23,19 @@ class Worker:
             250,
         ]
 
+    def main(self):
+        images = self.getImages()
+        if self.multiprocessing:
+            self.multiplex(images)
+        else:
+            for image in images:
+                for size in self.sizes:
+                    self.resize(image, size)
+
     """
     Run resize in Multiprocessing
     """
-    def main(self):
-        images = self.getImages()
+    def multiplex(self, images):
         for image in images:
             pool = Pool(self.poolsize)
             for size in self.sizes:
