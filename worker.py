@@ -1,9 +1,6 @@
-
 import os, glob, re
 from PIL import Image
 from multiprocessing import Pool, Lock
-
-lock = Lock()
 
 
 class Worker:
