@@ -9,7 +9,7 @@ from multiprocessing import Pool
 class Worker:
 
     def __init__(self):
-        self.poolsize = 2
+        self.poolsize = 1
         self.cdnPath = "/home/ph/Bureau/cdn_squarebreak"
         self.cdnNewPath = "/home/ph/Bureau/PYTHON_cdn_squarebreak"
         self.quality = 80

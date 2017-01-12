@@ -15,9 +15,9 @@ sys	0m16.684s
 ```bash
 $ time python3 worker.py
 
-real	0m33.092s #WHAT THE F*******CK !!! :D
-user	1m48.532s
-sys	0m12.292s
+real	0m18.279s #WHAT THE F*******CK !!! :D
+user	1m4.452s
+sys	0m5.236s
 ```
 
 ![Can't touch this](http://www.tigerstrypes.com/wp-content/uploads/2016/04/hammer2.jpg)
@@ -25,7 +25,7 @@ sys	0m12.292s
 ## Explanations
 I wrote almost the same code in both languages and they perform almost he same (2m20~)
 
-But when using Python Multiprocessing with 2 workers then they don't play in the same league.
+But when using Python Multiprocessing then they don't play in the same league.
 
 I ran my test on a Intel(R) Core(TM) i5-5200U CPU @ 2.20GHz (2 cores & 4 threads)
 
