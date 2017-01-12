@@ -13,7 +13,7 @@ class Worker:
     END = '\033[0m'
 
     def __init__(self):
-        self.multiprocessing = True
+        self.debug = False
         self.poolsize = 1
         self.totalImageProcessed = 0
         self.cdnPath = "/home/ph/Bureau/cdn_squarebreak"
@@ -30,12 +30,7 @@ class Worker:
 
     def main(self):
         images = self.getImages()
-        if self.multiprocessing:
-            self.multiplex(images)
-        else:
-            for image in images:
-                for size in self.sizes:
-                    self.resize(image, size)
+        self.multiplex(images)
 
     """
     Run resize in Multiprocessing
@@ -47,11 +42,14 @@ class Worker:
             for size in self.sizes:
                 try:
                     print(self.ASK+'Ask process to resize #'+str(nb)+self.END)
-                    pool.apply_async(self.resize, (image, size, nb))
+                    if self.debug:
+                        debug = pool.apply_async(self.resize, (image, size, nb))
+                        debug.get()
+                    else:
+                        pool.apply_async(self.resize, (image, size, nb))
                     nb += 1
                 except OSError as e:
-                    with lock:
-                        print(e)
+                    print(e)
         pool.close()
         pool.join()
 
@@ -72,31 +70,35 @@ class Worker:
     Resize the image and save it
     """
     def resize(self, imagePath, size, nb):
-        imageLib = Image.open(imagePath).convert('RGB')
-        # Bug https://github.com/python-pillow/Pillow/issues/1237
-        image = imageLib.copy()
-        imageLib.close()
-        originalWidth, originalHeight = image.size
-        ratio = originalWidth / originalHeight
-        # Portrait or Landscape
-        if ratio > 1:
-            width = size
-            height = int(width / ratio)
-        else:
-            height = size
-            width = int(height * ratio)
+        try:
+            imageLib = Image.open(imagePath).convert('RGB')
+            # Bug https://github.com/python-pillow/Pillow/issues/1237
+            image = imageLib.copy()
+            imageLib.close()
+            originalWidth, originalHeight = image.size
+            ratio = originalWidth / originalHeight
+            # Portrait or Landscape
+            if ratio > 1:
+                width = size
+                height = int(width / ratio)
+            else:
+                height = size
+                width = int(height * ratio)
 
-        im2 = image.resize((width, height), Image.ANTIALIAS)
-        newPath = self.cdnNewPath+'/'+str(size)
-        # Create directory with appropriate size
-        if not os.path.exists(newPath):
-            os.makedirs(newPath)
+            im2 = image.resize((width, height), Image.ANTIALIAS)
+            newPath = self.cdnNewPath+'/'+str(size)
+            # Create directory with appropriate size
+            if not os.path.exists(newPath):
+                os.makedirs(newPath)
 
-        newName = re.search('\/([A-Za-z0-9]*)\.jpg', imagePath).group(1)
+            newName = re.search('\/([A-Za-z0-9]*)\.jpg', imagePath).group(1)
 
-        # Save the image
-        newImageName = newPath+'/'+newName+'.jpg'
-        im2.save(newImageName, optimize=True, quality=self.quality)
+            # Save the image
+            newImageName = newPath+'/'+newName+'.jpg'
+            im2.save(newImageName, optimize=True, quality=self.quality)
+        except Exception as e:
+            print('Error while resizing: '+e)
+
         print(self.GREEN+'Process ~> #'+str(nb)+' resized ('+imagePath+')'+self.END)
 
 if __name__ == "__main__":

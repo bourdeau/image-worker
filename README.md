@@ -27,7 +27,7 @@ But when using Python Multiprocessing then they don't play in the same league.
 
 I ran my test on a Intel(R) Core(TM) i5-5200U CPU @ 2.20GHz (2 cores & 4 threads)
 
-*Note:* Python LIB seem to do better than PHP Imagick in term of image size.
+*Note:* Python LIB seems to do better than PHP Imagick in term of image size.
 
 ## BUGS
 - When running in Multiprocessing it randomly loose some images
