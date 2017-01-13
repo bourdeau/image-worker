@@ -1,3 +1,5 @@
+#!/usr/bin/python3.5
+
 import os, glob, re
 from PIL import Image
 from multiprocessing import Pool, Lock
@@ -5,24 +7,19 @@ from multiprocessing import Pool, Lock
 
 class Worker:
 
-    GREEN = '\033[92m'
-    ASK = '\033[93m'
-    END = '\033[0m'
-
     def __init__(self):
         self.debug = False
-        self.poolsize = 1
-        self.totalImageProcessed = 0
+        self.poolsize = 8
         self.cdnPath = "/home/ph/Bureau/cdn_squarebreak"
         self.cdnNewPath = "/home/ph/Bureau/PYTHON_cdn_squarebreak"
         self.quality = 80
         self.sizes = [
+            250,
             1200,
             800,
             650,
             400,
             300,
-            250,
         ]
 
     def main(self):
@@ -33,12 +30,11 @@ class Worker:
     Run resize in Multiprocessing
     """
     def multiplex(self, images):
+        pool = Pool(processes=self.poolsize)
         nb = 0
-        for image in images:
-            pool = Pool(processes=self.poolsize)
-            for size in self.sizes:
+        for size in self.sizes:
+            for image in images:
                 try:
-                    print(self.ASK+'Ask process to resize #'+str(nb)+' ('+image+')'+self.END)
                     if self.debug:
                         debug = pool.apply_async(self.resize, (image, size, nb))
                         debug.get()
@@ -61,6 +57,9 @@ class Worker:
             if (match):
                 originals.append(image)
 
+        total = len(originals)*len(self.sizes)
+        print ('Resizing ' + str(len(originals)) + ' images in '+str(len(self.sizes)) + ' dimensions')
+        print ('TOTAL:  ' + str(total) + ' to create')
         return originals
 
     """
@@ -83,6 +82,7 @@ class Worker:
                 width = int(height * ratio)
 
             im2 = image.resize((width, height), Image.ANTIALIAS)
+            image.close()
             newPath = self.cdnNewPath+'/'+str(size)
             # Create directory with appropriate size
             if not os.path.exists(newPath):
@@ -93,11 +93,6 @@ class Worker:
             # Save the image
             newImageName = newPath+'/'+newName+'.jpg'
             im2.save(newImageName, optimize=True, quality=self.quality)
+            im2.close()
         except Exception as e:
             print('Error while resizing: '+e)
-
-        print(self.GREEN+'Process ~> #'+str(nb)+' resized ('+newImageName+')'+self.END)
-
-if __name__ == "__main__":
-    test = Worker()
-    test.main()
