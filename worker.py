@@ -38,7 +38,7 @@ class Worker:
     """
     Run resize in Multiprocessing
     """
-    def run(self):
+    def __run(self):
         # It's easier to ask for forgiveness than for permission
         # self.isWritable(self.destinationDir)
         pool = Pool(processes=self.poolsize)
@@ -55,7 +55,7 @@ class Worker:
     """
     Check if directory is writable
     """
-    def isWritable(self, path: str) -> bool:
+    def __isWritable(self, path: str) -> bool:
         if os.access(path, os.W_OK):
             return True
         else:
@@ -65,7 +65,7 @@ class Worker:
     """
     Check if a file is readable
     """
-    def isReadable(self, file: str) -> bool:
+    def __isReadable(self, file: str) -> bool:
         if os.access(file, os.R_OK):
             return True
         else:
@@ -75,7 +75,7 @@ class Worker:
     """
     Get the original images paths
     """
-    def getImages(self) -> bool:
+    def __getImages(self) -> bool:
         originals = []
         try:
             images = glob.glob(self.sourceDir+'/**/*.jpg', recursive=True)
@@ -100,7 +100,7 @@ class Worker:
     """
     Resize the image and save it
     """
-    def resize(self, imagePath, size):
+    def __resize(self, imagePath, size):
         try:
             image = Image.open(imagePath).convert('RGB')
             originalWidth, originalHeight = image.size
