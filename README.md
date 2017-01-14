@@ -2,14 +2,18 @@
 Resizing images with Python using Multiprocessing 🐍
 
 ## Test
-Resizing 354 images (539.6 Mb) in 6 widths (1200px, 800px, 650px, 400px, 300px, 250px)
 
 ```bash
-$ time python3 worker.py
-Resizing 124 images in 6dimensions
-TOTAL:  744
+# Run on a Intel(R) Core(TM) i5-5200U CPU @ 2.20GHz
 
-real	0m26.325s
-user	3m14.784s
-sys	0m5.448s
+$ time ./main.py -s=/cdn_squarebreak -d=/cdn2_squarebreak/ -q=80 -si 100 200 300 600
+SOURCE: /cdn_squarebreak
+DESTINATION : /cdn2_squarebreak/
+#####################################
+Resizing 762 images in 4 dimensions
+TOTAL:  3048 images to create
+
+real	4m34.680s
+user	17m12.924s
+sys	0m41.028s
 ```

@@ -124,7 +124,7 @@ class Worker:
 
             # Save the image
             newImageName = newPath+'/'+newName+'.jpg'
-            im2.save(newImageName, optimize=True, quality=self.quality)
+            im2.save(newImageName, format='JPEG', optimize=True, quality=self.quality)
             im2.close()
         except Exception as e:
             print('Error while resizing: '+e)
