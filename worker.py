@@ -1,15 +1,17 @@
 #!/usr/bin/python3.5
-import os, glob, re
+import os, glob, re, MySQLdb, utils
 from PIL import Image
 from multiprocessing import Pool
 
 
+
 class Worker:
 
-    def __init__(self, source: str, destination: str, quality: int, sizes=None):
+    def __init__(self, source: str, destination: str, quality: int, fromDB, sizes=None):
         self.poolsize = 8
         self.sourceDir = source
         self.destinationDir = destination
+        self.fromDB = fromDB
         if quality:
             self.quality = quality
         else:
@@ -38,11 +40,15 @@ class Worker:
     """
     Run resize in Multiprocessing
     """
-    def __run(self):
+    def run(self):
         # It's easier to ask for forgiveness than for permission
         # self.isWritable(self.destinationDir)
         pool = Pool(processes=self.poolsize)
-        images = self.getImages()
+        if self.fromDB:
+            images = self.getImagesFromDB()
+        else:
+            self.getImagesFromDir()
+
         for image in images:
             for size in self.sizes:
                 try:
@@ -55,7 +61,7 @@ class Worker:
     """
     Check if directory is writable
     """
-    def __isWritable(self, path: str) -> bool:
+    def isWritable(self, path: str) -> bool:
         if os.access(path, os.W_OK):
             return True
         else:
@@ -65,7 +71,7 @@ class Worker:
     """
     Check if a file is readable
     """
-    def __isReadable(self, file: str) -> bool:
+    def isReadable(self, file: str) -> bool:
         if os.access(file, os.R_OK):
             return True
         else:
@@ -73,9 +79,9 @@ class Worker:
             raise
 
     """
-    Get the original images paths
+    Get the original images paths from dir
     """
-    def __getImages(self) -> bool:
+    def getImagesFromDir(self) -> bool:
         originals = []
         try:
             images = glob.glob(self.sourceDir+'/**/*.jpg', recursive=True)
@@ -98,9 +104,33 @@ class Worker:
         return originals
 
     """
+    Get the original images paths from dir
+    """
+    def getImagesFromDB(self):
+        config = utils.getConfig()
+        db = MySQLdb.connect(host=config['database_host'], user=config['database_user'], passwd=config['database_password'], db=config['database_name'])
+        cur = db.cursor()
+
+        cur.execute("SELECT local_key FROM media")
+
+        originals = []
+        for rows in cur.fetchall():
+            for localKey in rows:
+                prefix = localKey[:2]
+                image = self.sourceDir+'/'+prefix+'/'+localKey
+                try:
+                    self.isReadable(image)
+                    originals.append(image)
+                except Exception as e:
+                    print('IMAGE ' + image + ' exist in DB but not as a file')
+        db.close()
+
+        return originals
+
+    """
     Resize the image and save it
     """
-    def __resize(self, imagePath, size):
+    def resize(self, imagePath, size):
         try:
             image = Image.open(imagePath).convert('RGB')
             originalWidth, originalHeight = image.size
