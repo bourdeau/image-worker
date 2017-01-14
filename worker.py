@@ -105,9 +105,6 @@ class Worker:
     def resize(self, imagePath, size):
         try:
             image = Image.open(imagePath).convert('RGB')
-            # Bug https://github.com/python-pillow/Pillow/issues/1237
-            # image = imageLib.copy()
-            # imageLib.close()
             originalWidth, originalHeight = image.size
             ratio = originalWidth / originalHeight
             # Portrait or Landscape
