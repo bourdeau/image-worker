@@ -1,5 +1,4 @@
 #!/usr/bin/python3.5
-
 import os, glob, re
 from PIL import Image
 from multiprocessing import Pool
@@ -7,20 +6,18 @@ from multiprocessing import Pool
 
 class Worker:
 
-    def __init__(self, source, destination):
+    def __init__(self, source: str, destination: str, quality: int, sizes=None):
         self.poolsize = 8
         self.sourceDir = source
         self.destinationDir = destination
-        self.quality = 80
-        self.sizes = [
-            1280,
-            960,
-            760,
-            640,
-            480,
-            320,
-            240,
-        ]
+        if quality:
+            self.quality = quality
+        else:
+            self.quality = 100
+        if sizes:
+            self.sizes = sizes
+        else:
+            self.sizes = [1280, 960, 760, 640, 480, 320, 240]
 
     """
     Main
@@ -58,7 +55,7 @@ class Worker:
     """
     Check if directory is writable
     """
-    def isWritable(self, path):
+    def isWritable(self, path: str) -> bool:
         if os.access(path, os.W_OK):
             return True
         else:
@@ -68,7 +65,7 @@ class Worker:
     """
     Check if a file is readable
     """
-    def isReadable(self, file):
+    def isReadable(self, file: str) -> bool:
         if os.access(file, os.R_OK):
             return True
         else:
@@ -78,7 +75,7 @@ class Worker:
     """
     Get the original images paths
     """
-    def getImages(self):
+    def getImages(self) -> bool:
         originals = []
         try:
             images = glob.glob(self.sourceDir+'/**/*.jpg', recursive=True)
@@ -97,6 +94,7 @@ class Worker:
         total = len(originals)*len(self.sizes)
         print('Resizing ' + str(len(originals)) + ' images in '+str(len(self.sizes)) + ' dimensions')
         print('TOTAL:  ' + str(total) + ' images to create')
+
         return originals
 
     """
