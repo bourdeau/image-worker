@@ -1,7 +1,9 @@
 import os
 import glob
 import re
+import sys
 import MySQLdb
+from shutil import copyfile
 from imageworker import utils
 from PIL import Image
 from multiprocessing import Pool
@@ -24,38 +26,45 @@ class Worker:
             self.sizes = [1280, 960, 760, 640, 480, 320, 240]
 
     def main(self):
+        self.__checkArguments()
+        print('SOURCE: ' + self.sourceDir)
+        print('DESTINATION : ' + self.destinationDir)
+        print('#####################################')
+        self.__run()
+
+    def __checkArguments(self):
         if not os.path.isdir(self.sourceDir):
             raise Exception('Directory "' + self.sourceDir + '" doesn\'t exist!')
         if not os.path.isdir(self.destinationDir):
             raise Exception('Directory "' + self.destinationDir + '" doesn\'t exist!')
+        if self.quality < 0 or self.quality > 100:
+            raise ValueError('Quality must be between 0 and 100')
+        for size in self.sizes:
+            if size < 0 or size > 5000:
+                raise ValueError('Size must be between 0 and 5000')
 
-        print('SOURCE: ' + self.sourceDir)
-        print('DESTINATION : ' + self.destinationDir)
-        print('#####################################')
-        self.run()
-
-    def run(self):
+    def __run(self):
         """
-        Run resize in Multiprocessing
+        Run __resize in Multiprocessing
         """
         # It's easier to ask for forgiveness than for permission
-        # self.isWritable(self.destinationDir)
+        # self.__isWritable(self.destinationDir)
         pool = Pool(processes=self.poolsize)
         if self.fromDB:
-            images = self.getImagesFromDB()
+            images = self.__getImagesFromDB()
         else:
             images = self.getImagesFromDir()
 
         for image in images:
             for size in self.sizes:
                 try:
-                    pool.apply_async(self.resize, (image, size))
+                    pool.apply_async(self.__resize, (image, size))
                 except OSError as e:
                     print(e)
         pool.close()
         pool.join()
 
-    def isWritable(self, path: str) -> bool:
+    def __isWritable(self, path: str) -> bool:
         """
         Check if directory is writable
         """
@@ -65,7 +74,7 @@ class Worker:
             print('ERROR: "' + path + '" is not writable!')
             raise
 
-    def isReadable(self, file: str) -> bool:
+    def __isReadable(self, file: str) -> bool:
         """
         Check if a file is readable
         """
@@ -91,7 +100,7 @@ class Worker:
             if (match):
                 # Glob should raise an exception if the image is not readle but
                 # I rather take an extra security
-                self.isReadable(image)
+                self.__isReadable(image)
                 originals.append(image)
 
         total = len(originals)*len(self.sizes)
@@ -103,7 +112,7 @@ class Worker:
     """
     Get the original images paths from dir
     """
-    def getImagesFromDB(self):
+    def __getImagesFromDB(self):
         config = utils.getConfig()
         db = MySQLdb.connect(host=config['database_host'], user=config['database_user'], passwd=config['database_password'], db=config['database_name'])
         cur = db.cursor()
@@ -116,7 +125,7 @@ class Worker:
                 prefix = localKey[:2]
                 image = self.sourceDir+'/'+prefix+'/'+localKey
                 try:
-                    self.isReadable(image)
+                    self.__isReadable(image)
                     originals.append(image)
                 except Exception as e:
                     print('IMAGE ' + image + ' exist in DB but not as a file')
@@ -127,7 +136,12 @@ class Worker:
     """
     Resize the image and save it
     """
-    def resize(self, imagePath, size):
+    def __resize(self, imagePath, size):
+        # Copy file first
+        backupOriginalDir = self.destinationDir + '/originals'
+        if not os.path.exists(backupOriginalDir):
+            os.makedirs(backupOriginalDir)
+        copyfile(imagePath, backupOriginalDir)
         try:
             image = Image.open(imagePath).convert('RGB')
             originalWidth, originalHeight = image.size
@@ -140,7 +154,7 @@ class Worker:
                 height = size
                 width = int(height * ratio)
 
-            im2 = image.resize((width, height), Image.ANTIALIAS)
+            im2 = image.__resize((width, height), Image.ANTIALIAS)
             image.close()
             newPath = self.destinationDir+'/'+str(size)
             # Create directory with appropriate size
