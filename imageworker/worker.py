@@ -1,4 +1,3 @@
-#!/usr/bin/python3.5
 import os
 import glob
 import re
@@ -26,11 +25,9 @@ class Worker:
 
     def main(self):
         if not os.path.isdir(self.sourceDir):
-            print('Directory "' + self.sourceDir + '" doesn\'t exist!')
-            raise
+            raise Exception('Directory "' + self.sourceDir + '" doesn\'t exist!')
         if not os.path.isdir(self.destinationDir):
-            print('Directory "' + self.destinationDir + '" doesn\'t exist!')
-            raise
+            raise Exception('Directory "' + self.destinationDir + '" doesn\'t exist!')
 
         print('SOURCE: ' + self.sourceDir)
         print('DESTINATION : ' + self.destinationDir)

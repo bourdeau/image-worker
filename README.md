@@ -1,7 +1,7 @@
 # image-worker
 Resizing images with Python using Multiprocessing 🐍
 
-## Test
+## Performance
 
 ```bash
 # Run on a Intel(R) Core(TM) i5-5200U CPU @ 2.20GHz
@@ -16,4 +16,8 @@ TOTAL:  3048 images to create
 real	4m34.680s
 user	17m12.924s
 sys	0m41.028s
+```
+## Test
+```bash
+python3 -m unittest tests/imageworker/worker.py
 ```
