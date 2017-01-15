@@ -24,9 +24,6 @@ class Worker:
         else:
             self.sizes = [1280, 960, 760, 640, 480, 320, 240]
 
-    """
-    Main
-    """
     def main(self):
         if not os.path.isdir(self.sourceDir):
             print('Directory "' + self.sourceDir + '" doesn\'t exist!')
@@ -40,10 +37,10 @@ class Worker:
         print('#####################################')
         self.run()
 
-    """
-    Run resize in Multiprocessing
-    """
     def run(self):
+        """
+        Run resize in Multiprocessing
+        """
         # It's easier to ask for forgiveness than for permission
         # self.isWritable(self.destinationDir)
         pool = Pool(processes=self.poolsize)
@@ -61,20 +58,20 @@ class Worker:
         pool.close()
         pool.join()
 
-    """
-    Check if directory is writable
-    """
     def isWritable(self, path: str) -> bool:
+        """
+        Check if directory is writable
+        """
         if os.access(path, os.W_OK):
             return True
         else:
             print('ERROR: "' + path + '" is not writable!')
             raise
 
-    """
-    Check if a file is readable
-    """
     def isReadable(self, file: str) -> bool:
+        """
+        Check if a file is readable
+        """
         if os.access(file, os.R_OK):
             return True
         else:
