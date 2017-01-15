@@ -1,6 +1,6 @@
 #!/usr/bin/python3.5
 import argparse
-from worker import Worker
+from imageworker.worker import Worker
 
 if __name__ == "__main__":
     # Arguments parsing

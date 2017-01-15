@@ -8,11 +8,11 @@ Get config from yml file
 
 
 def getConfig():
-    parameters_file = Path("apiclient/parameters.yml")
+    parameters_file = Path("config/parameters.yml")
     if parameters_file.is_file() is False:
-        copyfile('parameters.yml.dist', 'parameters.yml')
+        copyfile('imageworker/config/parameters.yml.dist', 'imageworker/config/parameters.yml')
 
-    stream = open("parameters.yml", "r")
+    stream = open("imageworker/config/parameters.yml", "r")
     config = yaml.load_all(stream)
     data = {}
     for parameters in config:
