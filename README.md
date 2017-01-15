@@ -17,7 +17,8 @@ real	4m34.680s
 user	17m12.924s
 sys	0m41.028s
 ```
-## Test
+
+## Tests
 ```bash
 python3 -m unittest tests/imageworker/worker.py
 ```
