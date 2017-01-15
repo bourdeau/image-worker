@@ -1,5 +1,8 @@
 #!/usr/bin/python3.5
-import os, glob, re, MySQLdb
+import os
+import glob
+import re
+import MySQLdb
 from imageworker import utils
 from PIL import Image
 from multiprocessing import Pool
