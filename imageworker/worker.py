@@ -44,7 +44,7 @@ class Worker:
         if self.fromDB:
             images = self.getImagesFromDB()
         else:
-            self.getImagesFromDir()
+            images = self.getImagesFromDir()
 
         for image in images:
             for size in self.sizes:
