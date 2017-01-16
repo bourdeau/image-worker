@@ -1,12 +1,14 @@
-import os, sys
+import os
 import unittest
 import shutil
 from imageworker.worker import Worker
 
 
 class WorkerTest(unittest.TestCase):
-    sourceDir = './tests/imageworker/images-source'
-    destDir = './tests/imageworker/images-dest'
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    sourceDir = dir_path + '/images-source'
+    destDir = dir_path + '/images-dest'
+
     def test_invalid_directories(self):
         test = Worker('/idonotexisthopefully', '/donotexisteither', -80, False, [100])
         self.assertRaises(Exception, test.main)
@@ -26,13 +28,13 @@ class WorkerTest(unittest.TestCase):
     def test_invalid_resizing(self):
         test = Worker(self.sourceDir, self.destDir, 80, False, [600])
         test.main()
-        if not os.path.isfile(self.destDir+'/originals/rabbit.jpg'):
+        if not os.path.isfile(self.destDir + '/originals/rabbit.jpg'):
             raise Exception('Copying original file failed!')
-        if not os.path.isfile(self.destDir+'/600/rabbit.jpg'):
+        if not os.path.isfile(self.destDir + '/600/rabbit.jpg'):
             raise Exception('Copying original file failed!')
 
         for the_file in os.listdir(self.destDir):
-            shutil.rmtree(self.destDir+'/' + the_file)
+            shutil.rmtree(self.destDir + '/' + the_file)
 
 if __name__ == '__main__':
     unittest.main()
