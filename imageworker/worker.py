@@ -1,7 +1,6 @@
 import os
 import glob
 import re
-import sys
 import MySQLdb
 from shutil import copyfile
 from imageworker import utils
