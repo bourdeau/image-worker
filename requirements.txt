@@ -1,4 +1,4 @@
-pyyaml==3.09
+pyyaml==3.11
 strictyaml==0.1.6
 flake8==2.6.2
 flake8-docstrings==0.2.8
