@@ -1,6 +1,13 @@
 # image-worker
 Resizing images with Python using Multiprocessing 🐍
 
+## Install
+
+```bash
+virtualenv venv --no-site-packages
+source venv/bin/activate
+```
+
 ## Performance
 
 ```bash
