@@ -5,9 +5,24 @@ Resizing images with Python using Multiprocessing 🐍
 ## Install
 
 ```bash
+git clone git@github.com:bourdeau/image-worker.git
+cd image-worker
 virtualenv venv --no-site-packages
 source venv/bin/activate
+pip install requiements.txt
 ```
+
+## Run
+
+```bash
+# -s = source directory
+# -d = destination directory
+# -q = quality of the image (0 to 100)
+# -si = sizes in pixel
+
+./main.py -s=/cdn_squarebreak -d=/cdn2_squarebreak/ -q=80 -si 100 200 300 600
+```
+
 
 ## Performance
 
