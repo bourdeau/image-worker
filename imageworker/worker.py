@@ -57,8 +57,7 @@ class Worker:
         for image in images:
             for size in self.sizes:
                 try:
-                    res = pool.apply_async(self.resize, (image, size))
-                    res.get(timeout=10)
+                    pool.apply_async(self.resize, (image, size))
                 except OSError as e:
                     print(e)
         pool.close()
