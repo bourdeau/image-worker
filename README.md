@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/bourdeau/image-worker.svg?branch=master)](https://travis-ci.org/bourdeau/image-worker)
 # image-worker
 Resizing images with Python using Multiprocessing 🐍
 

@@ -34,7 +34,8 @@ class WorkerTest(unittest.TestCase):
             raise Exception('Copying original file failed!')
 
         for the_file in os.listdir(self.destDir):
-            shutil.rmtree(self.destDir + '/' + the_file)
+            if os.path.isdir(self.destDir + '/' + the_file):
+                shutil.rmtree(self.destDir + '/' + the_file)
 
 if __name__ == '__main__':
     unittest.main()
