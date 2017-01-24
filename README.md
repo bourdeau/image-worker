@@ -20,7 +20,7 @@ pip install requiements.txt
 # -q = quality of the image (0 to 100)
 # -si = sizes in pixel
 
-./main.py -s=/cdn_squarebreak -d=/cdn2_squarebreak/ -q=80 -si 100 200 300 600
+./main.py -s=/home/bob/images -d=/home/bob/images-resized -q=80 -si 100 200 300 600
 ```
 
 
