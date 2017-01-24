@@ -29,9 +29,9 @@ pip install requiements.txt
 ```bash
 # Run on a Intel(R) Core(TM) i5-5200U CPU @ 2.20GHz
 
-$ time ./main.py -s=/cdn_squarebreak -d=/cdn2_squarebreak/ -q=80 -si 100 200 300 600
-SOURCE: /cdn_squarebreak
-DESTINATION : /cdn2_squarebreak/
+$ time ./main.py -s=/home/bob/images -d=/home/bob/images-resized -q=80 -si 100 200 300 600
+SOURCE: /home/bob/images
+DESTINATION : /home/bob/images-resized
 #####################################
 Resizing 762 images in 4 dimensions
 TOTAL:  3048 images to create
