@@ -1,20 +1,17 @@
 import os
 import glob
 import re
-import MySQLdb
 from shutil import copyfile
-from imageworker import utils
 from PIL import Image
 from multiprocessing import Pool
 
 
 class Worker:
 
-    def __init__(self, source: str, destination: str, quality: int, fromDB, sizes=None):
+    def __init__(self, source: str, destination: str, quality: int, sizes=None):
         self.poolsize = 8
         self.sourceDir = source
         self.destinationDir = destination
-        self.fromDB = fromDB
         if quality:
             self.quality = quality
         else:
@@ -49,10 +46,8 @@ class Worker:
         # It's easier to ask for forgiveness than for permission
         # self.__isWritable(self.destinationDir)
         pool = Pool(processes=self.poolsize)
-        if self.fromDB:
-            images = self.__getImagesFromDB()
-        else:
-            images = self.__getImagesFromDir()
+
+        images = self.__getImagesFromDir()
 
         for image in images:
             for size in self.sizes:
@@ -89,46 +84,22 @@ class Worker:
         """
         originals = []
         try:
-            images = glob.glob(self.sourceDir+'/**/*.jpg', recursive=True)
+            images = glob.glob(self.sourceDir + '/**/*.jpg', recursive=True)
         except IOError as e:
             print(e)
             raise
 
         for image in images:
-            match = re.search('\/([A-Za-z0-9]*)\.jpg', image)
+            match = re.search('\/(.*)\.jpg', image)
             if (match):
                 # Glob should raise an exception if the image is not readle but
                 # I rather take an extra security
                 self.__isReadable(image)
                 originals.append(image)
 
-        total = len(originals)*len(self.sizes)
-        print('Resizing ' + str(len(originals)) + ' images in '+str(len(self.sizes)) + ' dimensions')
+        total = len(originals) * len(self.sizes)
+        print('Resizing ' + str(len(originals)) + ' images in ' + str(len(self.sizes)) + ' dimensions')
         print('TOTAL:  ' + str(total) + ' images to create')
-
-        return originals
-
-    def __getImagesFromDB(self):
-        """
-        Get the original images paths from dir
-        """
-        config = utils.getConfig()
-        db = MySQLdb.connect(host=config['database_host'], user=config['database_user'], passwd=config['database_password'], db=config['database_name'])
-        cur = db.cursor()
-
-        cur.execute("SELECT local_key FROM media")
-
-        originals = []
-        for rows in cur.fetchall():
-            for localKey in rows:
-                prefix = localKey[:2]
-                image = self.sourceDir+'/'+prefix+'/'+localKey
-                try:
-                    self.__isReadable(image)
-                    originals.append(image)
-                except Exception as e:
-                    print('IMAGE ' + image + ' exist in DB but not as a file')
-        db.close()
 
         return originals
 
@@ -141,8 +112,8 @@ class Worker:
         if not os.path.exists(backupOriginalDir):
             os.makedirs(backupOriginalDir)
 
-        imageName = re.search('\/([A-Za-z0-9]*)\.jpg', imagePath).group(1)
-        copyfile(imagePath, backupOriginalDir + '/' + imageName+'.jpg')
+        imageName = re.search('\/([A-Za-z0-9-_]*)\.jpg', imagePath).group(1)
+        copyfile(imagePath, backupOriginalDir + '/' + imageName + '.jpg')
 
         try:
             image = Image.open(imagePath).convert('RGB')
@@ -158,14 +129,14 @@ class Worker:
 
             im2 = image.resize((width, height), Image.ANTIALIAS)
             image.close()
-            newPath = self.destinationDir+'/'+str(size)
+            newPath = self.destinationDir + '/' + str(size)
             # Create directory with appropriate size
             if not os.path.exists(newPath):
                 os.makedirs(newPath)
 
             # Save the image
-            newImageName = newPath+'/'+imageName+'.jpg'
+            newImageName = newPath + '/' + imageName + '.jpg'
             im2.save(newImageName, format='JPEG', optimize=True, quality=self.quality)
             im2.close()
         except Exception as e:
-            print('Error while resizing: '+e)
+            print('Error while resizing: ' + e)

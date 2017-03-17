@@ -7,9 +7,9 @@ Resizing images with Python using Multiprocessing 🐍
 ```bash
 git clone git@github.com:bourdeau/image-worker.git
 cd image-worker
-virtualenv venv --no-site-packages
+virtualenv -p /usr/bin/python3.5 venv --no-site-packages
 source venv/bin/activate
-pip install requiements.txt
+pip3 install -r requirements.txt
 ```
 
 ## Run
@@ -20,7 +20,7 @@ pip install requiements.txt
 # -q = quality of the image (0 to 100)
 # -si = sizes in pixel
 
-./main.py -s=/home/bob/images -d=/home/bob/images-resized -q=80 -si 100 200 300 600
+python main.py -s=/home/bob/images -d=/home/bob/images-resized -q=80 -si 100 200 300 600
 ```
 
 
