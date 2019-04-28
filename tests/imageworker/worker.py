@@ -10,23 +10,23 @@ class WorkerTest(unittest.TestCase):
     destDir = dir_path + '/images-dest'
 
     def test_invalid_directories(self):
-        test = Worker('/idonotexisthopefully', '/donotexisteither', -80, False, [100])
+        test = Worker('/idonotexisthopefully', '/donotexisteither', -80, [100])
         self.assertRaises(Exception, test.main)
 
     def test_invalid_quality(self):
-        test = Worker(self.sourceDir, self.destDir, -1, False, [300])
+        test = Worker(self.sourceDir, self.destDir, -1, [300])
         self.assertRaises(Exception, test.main)
-        test = Worker(self.sourceDir, self.destDir, 101, False, [400])
+        test = Worker(self.sourceDir, self.destDir, 101, [400])
         self.assertRaises(Exception, test.main)
 
     def test_invalid_dimensions(self):
-        test = Worker(self.sourceDir, self.destDir, 80, False, 'adazd')
+        test = Worker(self.sourceDir, self.destDir, 80, 'adazd')
         self.assertRaises(Exception, test.main)
-        test = Worker(self.sourceDir, self.destDir, 80, False, [7894949])
+        test = Worker(self.sourceDir, self.destDir, 80, [7894949])
         self.assertRaises(Exception, test.main)
 
     def test_invalid_resizing(self):
-        test = Worker(self.sourceDir, self.destDir, 80, False, [600])
+        test = Worker(self.sourceDir, self.destDir, 80, [600])
         test.main()
         if not os.path.isfile(self.destDir + '/originals/rabbit.jpg'):
             raise Exception('Copying original file failed!')

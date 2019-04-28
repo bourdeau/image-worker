@@ -7,9 +7,15 @@ Resizing images with Python using Multiprocessing 🐍
 ```bash
 git clone git@github.com:bourdeau/image-worker.git
 cd image-worker
-virtualenv -p /usr/bin/python3.5 venv --no-site-packages
+virtualenv -p /usr/bin/python3.7 venv --no-site-packages
 source venv/bin/activate
 pip3 install -r requirements.txt
+```
+
+In case of troubles compiling limImaging with gcc:
+```bash
+sudo apt-get install libjpeg-dev zlib1g-dev
+sudo apt-get install python3.7-dev
 ```
 
 ## Run
@@ -43,5 +49,5 @@ sys	0m41.028s
 
 ## Tests
 ```bash
-python3 -m unittest tests/imageworker/worker.py
+python3.7 -m unittest tests/imageworker/worker.py
 ```
