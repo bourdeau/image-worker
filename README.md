@@ -28,7 +28,7 @@ pipenv run python main.py -s=/home/bob/images -d=/home/bob/images-resized -q=80 
 
 ## Tests
 ```bash
-python3.7 -m unittest tests/imageworker/worker.py
+pipenv run python -m unittest tests/imageworker/worker.py
 ```
 
 ## Performance
