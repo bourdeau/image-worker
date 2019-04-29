@@ -1,15 +1,12 @@
 [![Build Status](https://travis-ci.org/bourdeau/image-worker.svg?branch=master)](https://travis-ci.org/bourdeau/image-worker)
 # image-worker
-Resizing images with Python using Multiprocessing 🐍
+Resizing images with Python using Multiprocessing with Pillow-SIMD 🐍
 
 ## Install
 
 ```bash
-git clone git@github.com:bourdeau/image-worker.git
-cd image-worker
-virtualenv -p /usr/bin/python3.7 venv --no-site-packages
-source venv/bin/activate
-pip3 install -r requirements.txt
+git clone git@github.com:bourdeau/image-worker.git && cd image-worker
+pipenv install
 ```
 
 In case of troubles compiling limImaging with gcc:
@@ -26,28 +23,26 @@ sudo apt-get install python3.7-dev
 # -q = quality of the image (0 to 100)
 # -si = sizes in pixel
 
-python main.py -s=/home/bob/images -d=/home/bob/images-resized -q=80 -si 100 200 300 600
+pipenv run python main.py -s=/home/bob/images -d=/home/bob/images-resized -q=80 -si 100 200 300 600
 ```
 
+## Tests
+```bash
+python3.7 -m unittest tests/imageworker/worker.py
+```
 
 ## Performance
 
 ```bash
 # Run on a Intel(R) Core(TM) i5-5200U CPU @ 2.20GHz
 
-$ time ./main.py -s=/home/bob/images -d=/home/bob/images-resized -q=80 -si 100 200 300 600
-SOURCE: /home/bob/images
-DESTINATION : /home/bob/images-resized
+SOURCE: /home/ph/Images-Original
+DESTINATION : /home/ph/Images-Resized
 #####################################
-Resizing 762 images in 4 dimensions
-TOTAL:  3048 images to create
+Resizing 300 images in 4 dimensions
+TOTAL:  1200 images to create
 
-real	4m34.680s
-user	17m12.924s
-sys	0m41.028s
-```
-
-## Tests
-```bash
-python3.7 -m unittest tests/imageworker/worker.py
+real	1m51,182s
+user	5m59,305s
+sys	0m23,097s
 ```
