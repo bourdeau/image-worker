@@ -41,13 +41,15 @@ class Worker:
 
     def __run(self):
         """
-        Run resize in Multiprocessing
+        Main
         """
-        # It's easier to ask for forgiveness than for permission
-        # self.__isWritable(self.destinationDir)
         pool = Pool(processes=self.poolsize)
 
         images = self.__getImagesFromDir()
+
+        total = len(images) * len(self.sizes)
+        print('Resizing ' + str(len(images)) + ' images in ' + str(len(self.sizes)) + ' dimensions')
+        print('TOTAL:  ' + str(total) + ' images to create')
 
         for image in images:
             for size in self.sizes:
@@ -68,16 +70,6 @@ class Worker:
             print('ERROR: "' + path + '" is not writable!')
             raise
 
-    def __isReadable(self, file: str):
-        """
-        Check if a file is readable
-        """
-        if os.access(file, os.R_OK):
-            return True
-        else:
-            print('ERROR: "' + file + '" is not readable!')
-            raise
-
     def __getImagesFromDir(self):
         """
         Get the original images paths from dir
@@ -92,14 +84,7 @@ class Worker:
         for image in images:
             match = re.search('\/(.*)\.jpg', image)
             if (match):
-                # Glob should raise an exception if the image is not readle but
-                # I rather take an extra security
-                self.__isReadable(image)
                 originals.append(image)
-
-        total = len(originals) * len(self.sizes)
-        print('Resizing ' + str(len(originals)) + ' images in ' + str(len(self.sizes)) + ' dimensions')
-        print('TOTAL:  ' + str(total) + ' images to create')
 
         return originals
 
@@ -107,13 +92,7 @@ class Worker:
         """
         Resize the image and save it (must be public for Pool)
         """
-        # Copy file first
-        backupOriginalDir = self.destinationDir + '/originals'
-        if not os.path.exists(backupOriginalDir):
-            os.makedirs(backupOriginalDir)
-
         imageName = re.search('\/([A-Za-z0-9-_]*)\.jpg', imagePath).group(1)
-        copyfile(imagePath, backupOriginalDir + '/' + imageName + '.jpg')
 
         try:
             image = Image.open(imagePath).convert('RGB')

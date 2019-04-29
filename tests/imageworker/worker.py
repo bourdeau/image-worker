@@ -25,13 +25,12 @@ class WorkerTest(unittest.TestCase):
         test = Worker(self.sourceDir, self.destDir, 80, [7894949])
         self.assertRaises(Exception, test.main)
 
-    def test_invalid_resizing(self):
+    def test_resized_image_exist(self):
         test = Worker(self.sourceDir, self.destDir, 80, [600])
         test.main()
-        if not os.path.isfile(self.destDir + '/originals/rabbit.jpg'):
-            raise Exception('Copying original file failed!')
+
         if not os.path.isfile(self.destDir + '/600/rabbit.jpg'):
-            raise Exception('Copying original file failed!')
+            raise Exception('Copying resized image failed!')
 
         for the_file in os.listdir(self.destDir):
             if os.path.isdir(self.destDir + '/' + the_file):

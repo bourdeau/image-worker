@@ -23,7 +23,7 @@ sudo apt-get install python3.7-dev
 # -q = quality of the image (0 to 100)
 # -si = sizes in pixel
 
-pipenv run python main.py -s=/home/bob/images -d=/home/bob/images-resized -q=80 -si 100 200 300 600
+pipenv run python main.py -s=/home/ph/Images-Original -d=/home/ph/Images-Resized -q=80 -si 100 200 300 600
 ```
 
 ## Tests
