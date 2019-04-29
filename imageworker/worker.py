@@ -15,27 +15,17 @@ class Worker:
         self.quality = quality
         self.sizes = sizes
 
-    def main(self):
-        """Main."""
-        self.__checkArguments()
-        print('SOURCE: ' + self.source_dir)
-        print('DESTINATION : ' + self.dest_dir)
-        print('#####################################')
-        self.__run()
-
-    def __checkArguments(self):
         if not os.path.isdir(self.source_dir):
             raise Exception('Directory "' + self.source_dir + '" doesn\'t exist!')
         if not os.path.isdir(self.dest_dir):
             raise Exception('Directory "' + self.dest_dir + '" doesn\'t exist!')
-        if self.quality < 0 or self.quality > 100:
-            raise ValueError('Quality must be between 0 and 100')
-        for size in self.sizes:
-            if size < 0 or size > 5000:
-                raise ValueError('Size must be between 0 and 5000')
 
-    def __run(self):
+    def main(self):
         """Run."""
+        print('SOURCE: ' + self.source_dir)
+        print('DESTINATION : ' + self.dest_dir)
+        print('#####################################')
+
         pool = Pool(processes=self.pool_size)
 
         images = self.__getImagesFromDir()

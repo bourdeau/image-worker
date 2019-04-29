@@ -10,20 +10,8 @@ class WorkerTest(unittest.TestCase):
     destDir = dir_path + '/images-dest'
 
     def test_invalid_directories(self):
-        test = Worker('/idonotexisthopefully', '/donotexisteither', -80, [100])
-        self.assertRaises(Exception, test.main)
-
-    def test_invalid_quality(self):
-        test = Worker(self.sourceDir, self.destDir, -1, [300])
-        self.assertRaises(Exception, test.main)
-        test = Worker(self.sourceDir, self.destDir, 101, [400])
-        self.assertRaises(Exception, test.main)
-
-    def test_invalid_dimensions(self):
-        test = Worker(self.sourceDir, self.destDir, 80, 'adazd')
-        self.assertRaises(Exception, test.main)
-        test = Worker(self.sourceDir, self.destDir, 80, [7894949])
-        self.assertRaises(Exception, test.main)
+        with self.assertRaises(Exception):
+            Worker('/idonotexisthopefully', '/donotexisteither', -80, [100])
 
     def test_resized_image_exist(self):
         test = Worker(self.sourceDir, self.destDir, 80, [600])

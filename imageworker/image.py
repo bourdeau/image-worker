@@ -12,6 +12,13 @@ class Image:
 
     def resize(self, dest_dir: str, size: int, quality: int = 100) -> None:
         """Resize the image and save it (method must be public for Pool)."""
+
+        if quality < 0 or quality > 100:
+            raise ValueError('Quality must be between 0 and 100')
+        if size < 0 or size > 5000:
+            raise ValueError('Size must be between 0 and 5000')
+
+        # @todo only handles jpg...
         img_name = re.search('\/([A-Za-z0-9-_]*)\.jpg', self.img_path).group(1)
 
         try:
